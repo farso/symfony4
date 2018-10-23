@@ -29,30 +29,32 @@ do
         FILES_TO_CHECK="$FILES_TO_CHECK $PHPFILE"
     fi
 done
+
+if [ "$FILES_TO_CHECK" == "" ]; then
+    exit 0
+fi
+
+ERRORS=0
     
-    ERRORS=0
-    
-    OUTPUT=$($PHP_BIN etc/phpcs.phar --standard=PSR2 --encoding=utf8 -n -p $FILES_TO_CHECK)
-    RETVAL=$?
+OUTPUT=$($PHP_BIN etc/phpcs.phar --standard=PSR2 --encoding=utf8 -n -p $FILES_TO_CHECK)
+RETVAL=$?
 
-    if [ $RETVAL -ne 0 ]; then
-        ERRORS=1;
-    fi 
-    
-    OUTPUT_MD=$($PHP_BIN etc/phpmd.phar $CODE_DIR text $MD_RULES)
+if [ $RETVAL -ne 0 ]; then
+    ERRORS=1;
+fi 
+ 
+OUTPUT_MD=$($PHP_BIN etc/phpmd.phar $CODE_DIR text $MD_RULES)
+if [ $? -ne 0 ]; then
+    ERRORS=1;
+fi
 
-    if [ $? -ne 0 ]; then
-        ERRORS=1;
-    fi
+if [ $ERRORS -ne 0 ]; then
+    ERRORS_LIST=$(echo "\n${RED}########################### PHPCS ERRORS ########################### \n")
+    ERRORS_LIST="$ERRORS_LIST $(echo "${NC}$OUTPUT")"
+    ERRORS_LIST="$ERRORS_LIST $(echo "\n\n\n${RED}########################### PHPMD ERRORS ########################### \n")"
+    ERRORS_LIST="$ERRORS_LIST $(echo "${NC}$OUTPUT_MD")"
 
-    if [ $ERRORS -ne 0 ]; then
-        ERRORS_LIST=$(echo "\n${RED}########################### PHPCS ERRORS ########################### \n")
-        ERRORS_LIST="$ERRORS_LIST $(echo "${NC}$OUTPUT")"
-        ERRORS_LIST="$ERRORS_LIST $(echo "\n\n\n${RED}########################### PHPMD ERRORS ########################### \n")"
-        ERRORS_LIST="$ERRORS_LIST $(echo "${NC}$OUTPUT_MD")"
-
-        ERRORS_LIST="$ERRORS_LIST $(echo "\n\n\n${RED}FIX THE ERRORS TO COMMIT THE CHANGES \n")"
-        echo -e "$ERRORS_LIST" 
-        exit 1;
-    fi
-
+    ERRORS_LIST="$ERRORS_LIST $(echo "\n\n\n${RED}FIX THE ERRORS TO COMMIT THE CHANGES \n")"
+    echo -e "$ERRORS_LIST" 
+    exit 1;
+fi
