@@ -5,10 +5,13 @@ namespace App\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/lucky/")
+ */
 class LuckyController
 {
     /**
-     * @Route("/lucky/number/{max}")
+     * @Route("number/{max}")
      */
     public function number($max)
     {
@@ -18,9 +21,9 @@ class LuckyController
             '<html><body>Lucky number: '.$number.'</body></html>'
         );
     }
-    
+
     /**
-     * @Route("/lucky/word/{len}")
+     * @Route("word/{len}")
      */
     public function word($len = 1)
     {
