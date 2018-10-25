@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Word {{ word }}
+{% endblock %}
+    {% block content %}
+        {{ parent() }}
+        <li><a href="/lucky/number/10">Number[10]</a></li>
+        <li><a href="/lucky/word/99">Word[99]</a></li>
+    {% endblock %}
+{% block body %}
+    <h1>Your lucky word is {{ word }}</h1>
+{% endblock %}    

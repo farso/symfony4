@@ -4,11 +4,12 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * @Route("/lucky/")
  */
-class LuckyController
+class LuckyController extends AbstractController
 {
     /**
      * @Route("number/{max}")
@@ -17,9 +18,9 @@ class LuckyController
     {
         $number = random_int(0, $max);
         
-        return new Response(
-            '<html><body>Lucky number: '.$number.'</body></html>'
-        );
+        return $this->render('lucky/number.html.twig', [
+            'number' => $number,
+        ]);
     }
 
     /**
@@ -32,8 +33,8 @@ class LuckyController
         
         $word = substr(implode($word), 0, $len);
         
-        return new Response(
-            '<html><body>Lucky word: '.$word.'</body></html>'
-        );
+        return $this->render('lucky/word.html.twig', [
+                    'word' => $word,
+        ]);
     }
 }
