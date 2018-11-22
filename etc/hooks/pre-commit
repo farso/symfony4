@@ -1,6 +1,6 @@
 #!/bin/bash
 CODE_DIR="src/"
-MD_RULES="codesize,unusedcode,naming"
+MD_EXCEPTIONS="etc/ruleset/rules.xml"
 PHP_BIN="docker-compose run php"
 RED='\033[0;31m'
 NC='\033[0m' # No Color
@@ -43,7 +43,8 @@ if [ $RETVAL -ne 0 ]; then
     ERRORS=1;
 fi 
  
-OUTPUT_MD=$($PHP_BIN etc/phpmd.phar $CODE_DIR text $MD_RULES)
+OUTPUT_MD=$($PHP_BIN etc/phpmd.phar $CODE_DIR text $MD_EXCEPTIONS)
+
 if [ $? -ne 0 ]; then
     ERRORS=1;
 fi
